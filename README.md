@@ -41,8 +41,8 @@ Skrypt instaluje te aplikacje, automatycznie konfiguruje ich współdziałanie o
 
 2. **Uruchomienie skryptu**:
    ```bash
-   chmod +x install.sh
-   sudo ./install.sh
+   chmod +x script.sh
+   sudo ./script.sh
    ```
 
 3. **Postępuj zgodnie z instrukcjami**: Skrypt przeprowadzi Cię przez proces instalacji, pytając o wybór usług i ich konfigurację.
