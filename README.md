@@ -1,82 +1,84 @@
-SafeStack-Installer
+# SafeStack-Installer
 
-Automatyczny instalator usług bezpieczeństwa i monitoringu dla systemów Debian/Ubuntu
+**SafeStack-Installer** to skrypt bash automatyzujący instalację i konfigurację kluczowych usług związanych z bezpieczeństwem i monitorowaniem systemów Debian/Ubuntu. Umożliwia szybkie wdrożenie Pi-hole, Unbound, CrowdSec, Prometheus i Grafana, integrując je w spójny ekosystem ochrony i wizualizacji danych.
 
-Opis projektu
+## Opis projektu
 
-SafeStack-Installer to skrypt bash, który automatyzuje instalację oraz konfigurację kluczowych usług związanych z bezpieczeństwem i monitorowaniem systemu. Dzięki niemu możesz szybko uruchomić:
+**SafeStack-Installer** został zaprojektowany, aby uprościć proces konfiguracji zaawansowanych narzędzi bezpieczeństwa i monitoringu na serwerach opartych na Debianie lub Ubuntu. Skrypt automatyzuje instalację i integrację następujących usług:
 
-Pi-hole – blokadę reklam i śledzenia,
+- **Pi-hole** – blokada reklam i śledzenia na poziomie sieciowym,
+- **Unbound** – lokalny resolver DNS zwiększający prywatność,
+- **CrowdSec** – lokalna ochrona przed atakami sieciowymi (bez rejestracji w centralnym API),
+- **Prometheus** – system monitorowania zbierający metryki,
+- **Grafana** – narzędzie do wizualizacji zebranych danych.
 
-Unbound – lokalny resolver DNS zwiększający prywatność,
+Skrypt instaluje te aplikacje, automatycznie konfiguruje ich współdziałanie oraz dostosowuje reguły zapory UFW (dla protokołów TCP i UDP), co znacząco podnosi poziom bezpieczeństwa systemu.
 
-CrowdSec – ochronę przed atakami sieciowymi, działającą lokalnie bez rejestracji w centralnym API,
+## Funkcjonalności
 
-Prometheus – system monitorowania zbierający metryki,
+- **Interaktywna instalacja**: Użytkownik ma możliwość wyboru usług do zainstalowania oraz konfiguracji portów i hasła dla Pi-hole, co zapewnia elastyczność w różnych scenariuszach użytkowania.
+- **Automatyczna konfiguracja**: Skrypt wykonuje następujące działania:
+  - Sprawdza dostępność wymaganych portów.
+  - Instaluje i aktualizuje wszystkie niezbędne pakiety.
+  - Konfiguruje zaporę UFW dla protokołów TCP i UDP.
+  - Integruje usługi, np. ustawia Pi-hole do korzystania z Unbound jako resolvera DNS, zwiększając prywatność.
+- **Obsługa błędów**: W przypadku problemów skrypt loguje zdarzenia do pliku `/var/log/install_script.log` i oferuje opcje: pominięcie problematycznego kroku lub przerwanie instalacji, co podnosi niezawodność procesu.
 
-Grafana – narzędzie do wizualizacji zebranych danych.
+## Wymagania
 
-Skrypt nie tylko instaluje wyżej wymienione aplikacje, ale także automatycznie konfiguruje integrację między nimi oraz ustawia odpowiednie reguły zapory UFW, co znacząco zwiększa bezpieczeństwo systemu.
+- **System operacyjny**: Debian (zalecane 11+) lub Ubuntu (zalecane 20.04+).
+- **Uprawnienia**: Skrypt wymaga uruchomienia z uprawnieniami roota (np. za pomocą `sudo`).
+- **Dostęp do Internetu**: Niezbędny do pobierania pakietów i aktualizacji systemu.
+- **Wolne porty**: Skrypt zweryfikuje dostępność portów i ostrzeże w przypadku konfliktów.
 
-Funkcjonalności
+## Instalacja i uruchomienie
 
-Interaktywna instalacja:Użytkownik wybiera, które usługi mają zostać zainstalowane oraz konfiguruje porty i hasło dla Pi-hole.
+1. **Klonowanie repozytorium**:
+   ```bash
+   git clone https://github.com/<nazwa_uzytkownika>/SafeStack-Installer.git
+   cd SafeStack-Installer
+   ```
 
-Automatyczna konfiguracja:Skrypt:
+2. **Uruchomienie skryptu**:
+   ```bash
+   chmod +x install.sh
+   sudo ./install.sh
+   ```
 
-Sprawdza dostępność portów.
+3. **Postępuj zgodnie z instrukcjami**: Skrypt przeprowadzi Cię przez proces instalacji, pytając o wybór usług i ich konfigurację.
 
-Instaluje wymagane pakiety.
+4. **Weryfikacja instalacji**: Po zakończeniu możesz sprawdzić działanie usług, np.:
+   - Pi-hole: `sudo systemctl status pihole-FTL`
+   - Unbound: `sudo systemctl status unbound`
+   - CrowdSec: `sudo cscli metrics`
+   - Prometheus: `sudo systemctl status prometheus`
+   - Grafana: `sudo systemctl status grafana-server`
 
-Konfiguruje zaporę UFW (zarówno dla TCP, jak i UDP).
+## Konfiguracja i integracja
 
-Integruje usługi (np. konfiguruje Pi-hole do korzystania z Unbound).
+Po instalacji usługi są wstępnie skonfigurowane do współpracy. Poniżej znajdziesz linki do paneli administracyjnych oraz wskazówki dotyczące dostosowania:
 
-Obsługa błędów:W przypadku wystąpienia problemu, skrypt loguje zdarzenia do /var/log/install_script.log oraz umożliwia interaktywne podjęcie decyzji – pominięcie danego kroku lub przerwanie całego procesu.
+- **Pi-hole**: Panel administracyjny: `http://<IP_SERWERA>/admin/`. Możesz dostosować listy blokad lub dodać własne reguły.
+- **Grafana**: Działa na porcie 3000: `http://<IP_SERWERA>:3000`. Domyślne dane logowania: admin/admin. Dodaj Prometheus jako źródło danych.
+- **Prometheus**: Metryki dostępne pod: `http://<IP_SERWERA>:9090`. Edytuj `/etc/prometheus/prometheus.yml` dla dodatkowych usług.
+- **CrowdSec**: Sprawdź stan: `sudo cscli metrics`. Dodawaj własne scenariusze ochrony.
+- **Unbound**: Logi w `/var/log/unbound.log`. Konfiguracja w `/etc/unbound/unbound.conf`.
 
-Wymagania
+## Logi i debugowanie
 
-System: Debian lub Ubuntu.
-
-Uprawnienia: Skrypt musi być uruchomiony jako root (np. za pomocą sudo).
-
-Dostęp do Internetu: Niezbędny do pobierania pakietów i aktualizacji systemu.
-
-Instalacja i uruchomienie
-
-Klonowanie repozytorium:
-
-git clone <URL_repozytorium>
-cd SafeStack-Installer
-
-Uruchomienie skryptu:
-
-chmod +x install.sh
-sudo ./install.sh
-
-Postępuj zgodnie z instrukcjami wyświetlanymi na ekranie.
-
-Konfiguracja i integracja
-
-Po instalacji można ręcznie sprawdzić i dostosować konfigurację poszczególnych usług:
-
-Pi-hole: Panel administracyjny dostępny pod http://<IP_SERWERA>/admin/
-
-Grafana: Domyślnie działa na porcie 3000 http://<IP_SERWERA>:3000
-
-Prometheus: Dane dostępne pod http://<IP_SERWERA>:9090
-
-CrowdSec: Możliwość sprawdzenia stanu usługi przez sudo cscli metrics
-
-Unbound: Logi działania w /var/log/unbound.log
-
-Logi i debugowanie
-
-Wszystkie istotne zdarzenia zapisywane są w pliku logów:
-
+Wszystkie zdarzenia zapisywane są w pliku:
+```bash
 cat /var/log/install_script.log
+```
 
-Jeśli napotkasz problemy, sprawdź ten plik lub skontaktuj się z nami na GitHubie.
+W razie problemów użyj poniższych komend do debugowania:
+- Pi-hole: `pihole -d`
+- Unbound: `unbound -d`
+- CrowdSec: `sudo cscli explain`
 
-Autorzy
-Acid
+Zgłoś problemy w sekcji Issues na GitHubie.
+
+## Autorzy
+
+- **Acid** – [GitHub](https://github.com/<nazwa_uzytkownika>)
+
