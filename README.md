@@ -79,3 +79,4 @@ cat /var/log/install_script.log
 Jeśli napotkasz problemy, sprawdź ten plik lub skontaktuj się z nami na GitHubie.
 
 Autorzy
+Acid
