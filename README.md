@@ -1,84 +1,84 @@
 # SafeStack-Installer
 
-**SafeStack-Installer** to skrypt bash automatyzujący instalację i konfigurację kluczowych usług związanych z bezpieczeństwem i monitorowaniem systemów Debian/Ubuntu. Umożliwia szybkie wdrożenie Pi-hole, Unbound, CrowdSec, Prometheus i Grafana, integrując je w spójny ekosystem ochrony i wizualizacji danych.
+**SafeStack-Installer** is a Bash script that automates the installation and configuration of essential security and monitoring services on Debian/Ubuntu systems. It enables rapid deployment of Pi-hole, Unbound, CrowdSec, Prometheus, and Grafana, integrating them into a cohesive ecosystem for security and data visualization.
 
-## Opis projektu
+## Project Description
 
-**SafeStack-Installer** został zaprojektowany, aby uprościć proces konfiguracji zaawansowanych narzędzi bezpieczeństwa i monitoringu na serwerach opartych na Debianie lub Ubuntu. Skrypt automatyzuje instalację i integrację następujących usług:
+**SafeStack-Installer** simplifies the setup of advanced security and monitoring tools on Debian or Ubuntu-based servers. The script automates installation and integration of the following services:
 
-- **Pi-hole** – blokada reklam i śledzenia na poziomie sieciowym,
-- **Unbound** – lokalny resolver DNS zwiększający prywatność,
-- **CrowdSec** – lokalna ochrona przed atakami sieciowymi (bez rejestracji w centralnym API),
-- **Prometheus** – system monitorowania zbierający metryki,
-- **Grafana** – narzędzie do wizualizacji zebranych danych.
+- **Pi-hole** – Network-level ad and tracking blocker.
+- **Unbound** – Local DNS resolver enhancing privacy.
+- **CrowdSec** – Local protection against network attacks (without registering to the central API).
+- **Prometheus** – Monitoring system for collecting metrics.
+- **Grafana** – Visualization tool for collected data.
 
-Skrypt instaluje te aplikacje, automatycznie konfiguruje ich współdziałanie oraz dostosowuje reguły zapory UFW (dla protokołów TCP i UDP), co znacząco podnosi poziom bezpieczeństwa systemu.
+The script installs these applications, automatically configures their interoperability, and adjusts UFW firewall rules (for TCP and UDP protocols), significantly enhancing system security.
 
-## Funkcjonalności
+## Features
 
-- **Interaktywna instalacja**: Użytkownik ma możliwość wyboru usług do zainstalowania oraz konfiguracji portów i hasła dla Pi-hole, co zapewnia elastyczność w różnych scenariuszach użytkowania.
-- **Automatyczna konfiguracja**: Skrypt wykonuje następujące działania:
-  - Sprawdza dostępność wymaganych portów.
-  - Instaluje i aktualizuje wszystkie niezbędne pakiety.
-  - Konfiguruje zaporę UFW dla protokołów TCP i UDP.
-  - Integruje usługi, np. ustawia Pi-hole do korzystania z Unbound jako resolvera DNS, zwiększając prywatność.
-- **Obsługa błędów**: W przypadku problemów skrypt loguje zdarzenia do pliku `/var/log/install_script.log` i oferuje opcje: pominięcie problematycznego kroku lub przerwanie instalacji, co podnosi niezawodność procesu.
+- **Interactive Installation**: Users can select services to install, configure ports, and set passwords for Pi-hole, offering flexibility for various use-case scenarios.
+- **Automated Configuration**: The script performs the following tasks:
+  - Checks availability of required ports.
+  - Installs and updates necessary packages.
+  - Configures the UFW firewall for TCP and UDP protocols.
+  - Integrates services, e.g., configuring Pi-hole to use Unbound as a DNS resolver, enhancing privacy.
+- **Error Handling**: In case of issues, the script logs events to `/var/log/install_script.log` and offers options to skip problematic steps or abort installation, improving reliability.
 
-## Wymagania
+## Requirements
 
-- **System operacyjny**: Debian (zalecane 11+) lub Ubuntu (zalecane 20.04+).
-- **Uprawnienia**: Skrypt wymaga uruchomienia z uprawnieniami roota (np. za pomocą `sudo`).
-- **Dostęp do Internetu**: Niezbędny do pobierania pakietów i aktualizacji systemu.
-- **Wolne porty**: Skrypt zweryfikuje dostępność portów i ostrzeże w przypadku konfliktów.
+- **Operating System**: Debian (recommended 11+) or Ubuntu (recommended 20.04+).
+- **Privileges**: Requires root privileges (e.g., via `sudo`).
+- **Internet Access**: Necessary for downloading packages and system updates.
+- **Available Ports**: The script verifies port availability and warns about conflicts.
 
-## Instalacja i uruchomienie
+## Installation and Usage
 
-1. **Klonowanie repozytorium**:
+1. **Clone the repository**:
    ```bash
-   git clone https://github.com/<nazwa_uzytkownika>/SafeStack-Installer.git
+   git clone https://github.com/<username>/SafeStack-Installer.git
    cd SafeStack-Installer
    ```
 
-2. **Uruchomienie skryptu**:
+2. **Run the script**:
    ```bash
    chmod +x script.sh
    sudo ./script.sh
    ```
 
-3. **Postępuj zgodnie z instrukcjami**: Skrypt przeprowadzi Cię przez proces instalacji, pytając o wybór usług i ich konfigurację.
+3. **Follow instructions**: The script guides you through installation, allowing selection of services and configurations.
 
-4. **Weryfikacja instalacji**: Po zakończeniu możesz sprawdzić działanie usług, np.:
+4. **Verify installation**: After completion, verify services:
    - Pi-hole: `sudo systemctl status pihole-FTL`
    - Unbound: `sudo systemctl status unbound`
    - CrowdSec: `sudo cscli metrics`
    - Prometheus: `sudo systemctl status prometheus`
    - Grafana: `sudo systemctl status grafana-server`
 
-## Konfiguracja i integracja
+## Configuration and Integration
 
-Po instalacji usługi są wstępnie skonfigurowane do współpracy. Poniżej znajdziesz linki do paneli administracyjnych oraz wskazówki dotyczące dostosowania:
+After installation, services are preconfigured to work together. Use the links below for administrative panels and customization tips:
 
-- **Pi-hole**: Panel administracyjny: `http://<IP_SERWERA>/admin/`. Możesz dostosować listy blokad lub dodać własne reguły.
-- **Grafana**: Działa na porcie 3000: `http://<IP_SERWERA>:3000`. Domyślne dane logowania: admin/admin. Dodaj Prometheus jako źródło danych.
-- **Prometheus**: Metryki dostępne pod: `http://<IP_SERWERA>:9090`. Edytuj `/etc/prometheus/prometheus.yml` dla dodatkowych usług.
-- **CrowdSec**: Sprawdź stan: `sudo cscli metrics`. Dodawaj własne scenariusze ochrony.
-- **Unbound**: Logi w `/var/log/unbound.log`. Konfiguracja w `/etc/unbound/unbound.conf`.
+- **Pi-hole**: Admin panel: `http://<SERVER_IP>/admin/`. Customize blocklists or add your own rules.
+- **Grafana**: Runs on port 3000: `http://<SERVER_IP>:3000`. Default login: admin/admin. Add Prometheus as a data source.
+- **Prometheus**: Metrics available at: `http://<SERVER_IP>:9090`. Edit `/etc/prometheus/prometheus.yml` to add more services.
+- **CrowdSec**: Check status: `sudo cscli metrics`. Add custom security scenarios.
+- **Unbound**: Logs located at `/var/log/unbound.log`. Configure via `/etc/unbound/unbound.conf`.
 
-## Logi i debugowanie
+## Logs and Debugging
 
-Wszystkie zdarzenia zapisywane są w pliku:
+All events are logged in:
 ```bash
 cat /var/log/install_script.log
 ```
 
-W razie problemów użyj poniższych komend do debugowania:
+For debugging, use these commands:
 - Pi-hole: `pihole -d`
 - Unbound: `unbound -d`
 - CrowdSec: `sudo cscli explain`
 
-Zgłoś problemy w sekcji Issues na GitHubie.
+Report issues in the GitHub Issues section.
 
-## Autorzy
+## Authors
 
-- **Acid** – [GitHub](https://github.com/<nazwa_uzytkownika>)
+- **Acid** – [GitHub](https://github.com/<username>)
 
